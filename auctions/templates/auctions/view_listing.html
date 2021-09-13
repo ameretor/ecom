@@ -1,0 +1,86 @@
+{% extends 'auctions/layout.html' %}
+
+{% block body %}
+<div style="text-align:center">
+    {% if message %}
+    <div class="alert alert-danger">{{ message }}</div>
+    {% endif %}
+    <h1>{{ item.title }}</h1>
+    <!-- <img src="{{ item.image.url }}" class="d-block w-100" alt="{{ item.title }}"> -->
+    <div class="container col-lg-8">
+        <div class="card mb-3">
+            <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.title }}">
+            <div class="card-body">
+                <h2 class="card-text">{{ item.description }}</h2>
+                <h3 class="card-text">
+                    <medium class="text-muted">{{ item.sex }}</medium>
+                </h3>
+                <div class="card-body">
+                    <h4> Category
+                        <a class="card-link" href="{% url 'category_view' item.id item.category %}">
+                            {{ item.category }}
+                        </a>
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <h4>Latest bid: ${{ item.latest_bid }}</h4>
+            </div>
+            <br>
+            <div class="card-body">
+                <form action="{% url 'view_listing' item.id %}" method="post">
+                    <h5>
+                        {% csrf_token %}
+                        Your Bid: $ {{ form.latest_bid }}
+                    </h5>
+                    <br>
+                    <input type="submit" class="btn btn-primary" value="Place new bid">
+                    <br>
+                    <br>
+                    <a href="{% url 'watch_list' user item.id %}" class="btn btn-success" name="add_to_watchlist">Add to
+                        Watchlist</a>
+                    {% if item.user != user %}
+                    <a href="{% url 'remove_item_from_watchlist' item.id %}" class="btn btn-danger"
+                        name="remove_from_watchlist">Remove Item from watchList</a>
+                    {% else %}
+                    <a href="{% url 'remove_item_from_watchlist' item.id %}" class="btn btn-danger"
+                        name="remove_from_watchlist">Remove Item from listing</a>
+                    <a href="{% url 'close_listing' item.id %}" class="btn btn-warning">Close this listing</a>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+        <!-- All About Comments -->
+        <!-- Displaying Comments -->
+        {% if all_comments %}
+        {% for comment in all_comments %}
+        <div class="card-body">
+            <div class="jumbotron text-center">
+                <div class="card-title">Commented by {{ comment.user }}</div>
+                <div class="card-text">{{ comment.time }}</div>
+                <div class="card-text">{{ comment.content }}</div>
+            </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+        <!-- Make comments -->
+        <div class="jumbotron text-center">
+            <form action="{% url 'comments' item.id %}" method="post">
+                {% if user.is_authenticated %}
+                <h2 class="card-title h2">Comment on this item</h2>
+                {% csrf_token %}
+                <div class="form-group">
+                    <textarea class="form-control" name="comment_text" cols="30" rows="10"
+                        placeholder="Comment on this item"></textarea>
+                    <br>
+                    <p>
+                        <input type="submit" value="Submit Comment" class="btn btn-success">
+                    </p>
+                </div>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}

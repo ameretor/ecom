@@ -1,0 +1,43 @@
+{% extends 'auctions/layout.html' %}
+{% block body %}
+<h2 class="text-center" style="margin-bottom: 30px;">All items in {{ listing_category }}</h2>
+<div class="container">
+    <div class="row">
+        {% for listing in all_listings %}
+        <div class="col-lg-6">
+            <div class="card" style="width: 40rem;">
+                <img src="{{ listing.image.url }}" class="figure-img img-fluid rounded" alt="{{ listing.image.title }}">
+                <div class="card-body">
+                    <br>
+                    <div><b>Listed by: {{ listing.user }}</b></div>
+                    <br>
+                    <h5 class="card-title product-title"><i>{{ listing.title }}</i></h5>
+                    <br>
+                    <div class="card-subtitle product-subtitle">
+                        <h6>{{ listing.sex }}</h6>
+                    </div>
+                    <br>
+                    <div class="card-subtitle product-subtitle">
+                        <h6>Category: {{ listing.category }}</h6>
+                    </div>
+                    <br>
+                    <div class="card-subtitle product-subtitle">
+                        <h6>Latest bid: ${{ listing.latest_bid }}</h6>
+                    </div>
+                    <br>
+                    <div class="card-subtitle product-subtitle">
+                        <h6>Bid ends Date: {{ listing.end_date }}</h6>
+                    </div>
+                    <br>
+                    <div class="card-subtitle product-subtitle">
+                        <p class="card-text">{{ listing.description }}</p>
+                    </div>
+                    <br>
+                    <a href="{% url 'view_listing' listing.id %}" class="btn btn-primary">View listing</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
